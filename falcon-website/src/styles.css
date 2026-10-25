@@ -1,0 +1,140 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@fontsource-variable/manrope";
+@import "@fontsource/libre-caslon-text/400.css";
+@import "@fontsource/libre-caslon-text/700.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ---------- Falcon brand tokens (navy · gold · silver) ---------- */
+:root {
+  --radius: 0.875rem;
+  --background: #060d1f;
+  --foreground: #eef2fb;
+  --card: #0b1630;
+  --card-foreground: #eef2fb;
+  --popover: #0a1429;
+  --popover-foreground: #eef2fb;
+  --primary: #d9ae4c;
+  --primary-foreground: #1a1304;
+  --secondary: #11203f;
+  --secondary-foreground: #eef2fb;
+  --muted: #0d1933;
+  --muted-foreground: #9fb0cf;
+  --accent: #163066;
+  --accent-foreground: #eef2fb;
+  --destructive: #ff6b6b;
+  --border: rgb(255 255 255 / 0.1);
+  --input: rgb(255 255 255 / 0.14);
+  --ring: #d9ae4c;
+  --gold: #d9ae4c;
+  --gold-soft: #f1d38a;
+  --gold-deep: #a97c22;
+  --royal: #2a5cc4;
+  --silver: #c9d2e3;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-gold-deep: var(--gold-deep);
+  --color-royal: var(--royal);
+  --color-silver: var(--silver);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
+  --radius-2xl: calc(var(--radius) + 12px);
+  --font-sans: "Manrope Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Libre Caslon Text", Georgia, "Times New Roman", serif;
+
+  --animate-shimmer-slide: shimmer-slide var(--speed) ease-in-out infinite alternate;
+  --animate-spin-around: spin-around calc(var(--speed) * 2) infinite linear;
+  --animate-marquee: marquee var(--duration, 40s) linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-pulse-ring: pulse-ring 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-spin-slow: spin 60s linear infinite;
+  --animate-spin-slow-rev: spin 90s linear infinite reverse;
+}
+
+@keyframes shimmer-slide { to { transform: translate(calc(100cqw - 100%), 0); } }
+@keyframes spin-around {
+  0% { transform: translateZ(0) rotate(0); }
+  15%, 35% { transform: translateZ(0) rotate(90deg); }
+  65%, 85% { transform: translateZ(0) rotate(270deg); }
+  100% { transform: translateZ(0) rotate(360deg); }
+}
+@keyframes marquee { to { transform: translateX(calc(-50% - 0.75rem)); } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+@keyframes pulse-ring { 0% { transform: scale(0.8); opacity: 0.7; } 80%, 100% { transform: scale(2.2); opacity: 0; } }
+
+@layer base {
+  * { @apply border-border outline-ring/50; }
+  html, body { overflow-x: clip; }
+  html { scroll-behavior: smooth; scroll-padding-top: 6rem; -webkit-text-size-adjust: 100%; }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01", "cv11";
+    text-rendering: optimizeLegibility;
+  }
+  h1, h2, h3, .font-display { font-family: var(--font-display); letter-spacing: -0.015em; }
+  ::selection { background: rgb(217 174 76 / 0.35); color: #fff; }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 6px; }
+}
+
+/* Cross-document page transitions (Chromium) */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: 220ms ease both fade-out; }
+::view-transition-new(root) { animation: 360ms ease both fade-in; }
+@keyframes fade-out { to { opacity: 0; } }
+@keyframes fade-in { from { opacity: 0; } }
+
+@layer utilities {
+  .text-gold-gradient {
+    background-image: linear-gradient(100deg, #f6dc99 0%, #d9ae4c 45%, #b98a2c 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .text-silver-gradient {
+    background-image: linear-gradient(180deg, #ffffff 0%, #b9c6e0 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgb(255 255 255 / 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.045) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 40%, #000 30%, transparent 100%);
+  }
+  .bg-noise {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    opacity: 0.035; mix-blend-mode: overlay;
+  }
+  .glass { background: rgb(255 255 255 / 0.04); backdrop-filter: blur(14px) saturate(140%); border: 1px solid rgb(255 255 255 / 0.09); }
+  .hairline-gold { background: linear-gradient(90deg, transparent, rgb(217 174 76 / 0.7), transparent); height: 1px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  @view-transition { navigation: none; }
+}
