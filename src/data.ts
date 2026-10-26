@@ -30,13 +30,7 @@ export type Proposal = {
   reviewer?: string;
 };
 export type Audit = { id: string; message: string; time: string };
-export const roles = [
-  "Owner",
-  "Sales",
-  "Operations Director",
-  "BDM",
-  "IT Admin",
-];
+export const roles = ["Owner", "Manager", "BDM", "IT Admin", "Agent"];
 export const initialTasks: Task[] = [
   {
     id: "t1",

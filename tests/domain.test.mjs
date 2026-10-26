@@ -26,12 +26,12 @@ test("ROI rejects missing, negative and non-finite input", () => {
     assert.equal(calculateROI(...args), null);
 });
 test("approval permissions do not allow lower-role escalation", () => {
-  assert.equal(mayApprove("Sales", 1), false);
+  assert.equal(mayApprove("Agent", 1), false);
   assert.equal(mayApprove("IT Admin", 3), false);
   assert.equal(mayApprove("BDM", 2), false);
   assert.equal(mayApprove("BDM", 1), true);
-  assert.equal(mayApprove("Operations Director", 2), true);
-  assert.equal(mayApprove("Operations Director", 3), false);
+  assert.equal(mayApprove("Manager", 2), true);
+  assert.equal(mayApprove("Manager", 3), false);
   assert.equal(mayApprove("Owner", 3), true);
   assert.equal(approvalRole(3), "Owner");
 });

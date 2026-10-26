@@ -15,19 +15,13 @@ export function calculateROI(price, rent, costs) {
   };
 }
 export function approvalRole(tier) {
-  return tier === 3
-    ? "Owner"
-    : tier === 2
-      ? "Operations Director"
-      : tier === 1
-        ? "BDM"
-        : null;
+  return tier === 3 ? "Owner" : tier === 2 ? "Manager" : tier === 1 ? "BDM" : null;
 }
 export function mayApprove(role, tier) {
   return (
     role === "Owner" ||
-    (tier === 2 && role === "Operations Director") ||
-    (tier === 1 && ["BDM", "Operations Director"].includes(role))
+    (tier === 2 && role === "Manager") ||
+    (tier === 1 && ["BDM", "Manager"].includes(role))
   );
 }
 export function csvCell(value) {
