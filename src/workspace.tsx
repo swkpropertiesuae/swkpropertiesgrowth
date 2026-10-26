@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, type FormEvent } from "react";
 import {
   ArrowUpRight,
   ArrowRight,
+  Send,
   LayoutDashboard,
   Users,
   FolderKanban,
@@ -38,7 +39,6 @@ import {
   clients as seedClients,
   leads as seedLeads,
   agents,
-  cities,
   roles,
   type Task,
   type RecordItem,
@@ -46,6 +46,9 @@ import {
   type Audit,
 } from "./data";
 import { calculateROI, mayApprove, csvCell, approvalRole } from "./domain.mjs";
+import { cityById } from "./growth/cities.mjs";
+import { CityPicker, CityBrief } from "./growth/CityExplorer";
+import LeadEngine from "./growth/LeadEngine";
 function makeId() {
   return (
     globalThis.crypto?.randomUUID?.() ??
@@ -62,6 +65,7 @@ const nav = [
   ["Analytics", ChartNoAxesCombined],
   ["Agent hub", Sparkles],
   ["Approvals", ShieldCheck],
+  ["Lead engine", Send],
   ["City planner", MapPin],
   ["ROI explorer", Calculator],
   ["Intelligence", Globe],
@@ -136,13 +140,13 @@ export default function Workspace() {
     [agent, setAgent] = useState(0),
     [brief, setBrief] = useState(""),
     [reviewTier, setReviewTier] = useState(1),
-    [city, setCity] = useState("Dubai"),
-    [cityQuery, setCityQuery] = useState(""),
+    [city, setCity] = useState("ae-dubai"),
     [cityPlan, setCityPlan] = useLocal<Record<string, string>>("cityPlans", {}),
     [price, setPrice] = useState(1500000),
     [rent, setRent] = useState(100000),
     [costs, setCosts] = useState(20000),
     [drag, setDrag] = useState("");
+  const cityObj = cityById(city) ?? cityById("ae-dubai")!;
   const searchRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     document.title = "SWKGrowth — " + page + " · Demo workspace";
@@ -1524,48 +1528,24 @@ export default function Workspace() {
                     <p>
                       <strong>A city-by-city planning canvas.</strong>
                       <br />
-                      31 city options from the brief. No live market data, legal
-                      advice, supported-language claims, or 500-city coverage is
-                      implied.
+                      Every city in the programme with its tier, rollout wave,
+                      languages, channel stack and Dubai-time posting windows.
+                      No live market data or legal advice is implied; confirm
+                      local advertising and data rules before any paid or direct
+                      outreach.
                     </p>
                   </div>
                   <div className="two-columns">
                     <section className="panel">
-                      <h2>Choose your perspective</h2>
-                      <label>
-                        Find a city
-                        <input
-                          value={cityQuery}
-                          onChange={(e) => setCityQuery(e.target.value)}
-                          placeholder="Search cities…"
-                        />
-                      </label>
-                      <div className="city-list">
-                        {cities
-                          .filter((c) =>
-                            c.toLowerCase().includes(cityQuery.toLowerCase()),
-                          )
-                          .map((c) => (
-                            <button
-                              key={c}
-                              className={city === c ? "selected" : ""}
-                              onClick={() => setCity(c)}
-                            >
-                              <MapPin size={15} />
-                              {c}
-                              <ArrowUpRight size={14} />
-                            </button>
-                          ))}
-                      </div>
-                      {!cities.some((c) =>
-                        c.toLowerCase().includes(cityQuery.toLowerCase()),
-                      ) && <p>No matching cities. Try another search.</p>}
+                      <h2>Choose a city</h2>
+                      <CityPicker value={city} onChange={setCity} />
                     </section>
                     <section className="panel" key={city}>
                       <span className="badge">
                         Illustrative planning template
                       </span>
-                      <h2>{city}. Your next conversation.</h2>
+                      <h2>{cityObj.name}, {cityObj.countryName}. Your next conversation.</h2>
+                      <CityBrief city={cityObj} />
                       <p>
                         Build a local brief before you choose a channel or a
                         budget. Research is required before using any plan.
@@ -1574,9 +1554,9 @@ export default function Workspace() {
                         onSubmit={(e) => {
                           e.preventDefault();
                           const d = new FormData(e.currentTarget);
-                          const text = `City: ${city}\nAudience: ${d.get("audience")}\nLanguage for review: ${d.get("language")}\nIllustrative budget (USD): ${d.get("budget")}\nHypothesis and review rule: ${d.get("hypothesis")}\nRequired checks: local advertising rules, property permits, consent, licensed advice, source verification.\nNo market data connected. KPI targets are not guarantees.`;
+                          const text = `City: ${cityObj.name}, ${cityObj.countryName} (${city})\nAudience: ${d.get("audience")}\nLanguage for review: ${d.get("language")}\nIllustrative budget (USD): ${d.get("budget")}\nHypothesis and review rule: ${d.get("hypothesis")}\nRequired checks: local advertising rules, property permits, consent, licensed advice, source verification.\nNo market data connected. KPI targets are not guarantees.`;
                           setCityPlan((a) => ({ ...a, [city]: text }));
-                          log("Saved city plan for " + city);
+                          log("Saved city plan for " + cityObj.name);
                           setToast("City plan saved locally.");
                         }}
                       >
@@ -1623,9 +1603,7 @@ export default function Workspace() {
                             className="text-link"
                             onClick={() =>
                               download(
-                                "swkgrowth-" +
-                                  city.toLowerCase().replaceAll(" ", "-") +
-                                  "-plan.txt",
+                                "swkgrowth-" + city + "-plan.txt",
                                 cityPlan[city],
                                 "text/plain",
                               )
@@ -1738,6 +1716,7 @@ export default function Workspace() {
                 </>
               )}
               {page === "Intelligence" && <Intelligence />}
+              {page === "Lead engine" && <LeadEngine role={role} />}
               {page === "Truth passport" && (
                 <>
                   <div className="notice">

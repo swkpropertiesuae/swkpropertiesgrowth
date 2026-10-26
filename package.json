@@ -7,7 +7,11 @@
     "dev": "vite --host 0.0.0.0",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --host 0.0.0.0",
-    "test": "node --test tests/*.test.mjs"
+    "test": "node --test tests/*.test.mjs",
+    "cities": "node scripts/build-cities.mjs",
+    "report": "node scripts/build-report.mjs",
+    "report:pdf": "node scripts/render-report-pdf.mjs",
+    "growth": "node engine/cli.mjs"
   },
   "dependencies": {
     "@fontsource/instrument-sans": "^5.3.0",

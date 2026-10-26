@@ -638,10 +638,10 @@ function Landing() {
           <div className="price-grid">
             {[
               ["Owner", 299, 250],
-              ["Sales", 199, 166],
-              ["Operations Director", 249, 208],
+              ["Manager", 249, 208],
               ["BDM", 149, 125],
               ["IT Admin", 99, 83],
+              ["Agent", 199, 166],
             ].map(([n, m, y]) => (
               <article key={n} className="price-card">
                 <span className="eyebrow">PROPOSED / PER USER</span>

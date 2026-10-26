@@ -5,3 +5,7 @@ dist/
 !.env.example
 *.log
 test-results/
+
+# Growth engine runtime ledger and local secrets
+data/runtime/
+engine/.env
